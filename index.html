@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Retail Shop Inventory Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-logo">📊</span>
+                <span class="nav-title">Retail Shop Inventory Manager</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#dashboard" class="nav-link active">🏠 Dashboard</a></li>
+                <li><a href="#deadstock" class="nav-link">⚠️ Dead Stock</a></li>
+                <li><a href="#inventory" class="nav-link">📦 Inventory</a></li>
+                <li><a href="#upload" class="nav-link">📤 Data Upload</a></li>
+                <li><a href="#team" class="nav-link">👥 Team</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section active">
+        <div class="container">
+            <div class="section-header">
+                <h1>📊 Dashboard Overview</h1>
+                <p class="subtitle">Your inventory at a glance</p>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: var(--color-bg-1);">
+                        <span style="font-size: 24px;">📦</span>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="totalSkus">40</div>
+                        <div class="metric-label">Total SKUs</div>
+                        <div class="metric-trend">+5.2% vs last month</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: var(--color-bg-3);">
+                        <span style="font-size: 24px;">✅</span>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="healthyInventory">25</div>
+                        <div class="metric-label">Healthy Inventory</div>
+                        <div class="metric-trend">78% of total</div>
+                    </div>
+                </div>
+
+                <div class="metric-card dead-stock-card">
+                    <div class="metric-icon" style="background: var(--color-bg-4);">
+                        <span style="font-size: 24px;">⚠️</span>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="deadStockItems">6</div>
+                        <div class="metric-label">Dead Stock Items</div>
+                        <div class="metric-trend warning">Needs attention</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: var(--color-bg-2);">
+                        <span style="font-size: 24px;">💰</span>
+                    </div>
+                    <div class="metric-content">
+                        <div class="metric-value" id="avgStockValue">$385,962</div>
+                        <div class="metric-label">Avg Stock Value</div>
+                        <div class="metric-trend">+2.8% vs last month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Section -->
+            <div class="quick-stats-section">
+                <h3>📊 Quick Statistics</h3>
+                <div class="quick-stats-grid">
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon">💰</div>
+                        <div class="quick-stat-content">
+                            <div class="quick-stat-label">Total Inventory Value</div>
+                            <div class="quick-stat-value" id="totalInventoryValue">₹0</div>
+                        </div>
+                    </div>
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon">⚠️</div>
+                        <div class="quick-stat-content">
+                            <div class="quick-stat-label">Items Below Reorder Level</div>
+                            <div class="quick-stat-value" id="itemsBelowReorder">0</div>
+                        </div>
+                    </div>
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon">🔴</div>
+                        <div class="quick-stat-content">
+                            <div class="quick-stat-label">High-Value Zero Stock</div>
+                            <div class="quick-stat-value" id="highValueZeroStock">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts & Notifications Section -->
+            <div class="alerts-section">
+                <h3>⚡ Alerts &amp; Notifications</h3>
+                <div class="alerts-container" id="alertsContainer">
+                    <!-- Alerts will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn btn--primary" onclick="navigateTo('upload')">📤 Upload New Data</button>
+                <button class="btn btn--secondary" onclick="downloadInventory()">📥 Download Inventory</button>
+                <button class="btn btn--secondary" onclick="printInventory()">📄 Print Inventory</button>
+                <button class="btn btn--outline" onclick="navigateTo('deadstock')">⚠️ View Dead Stock</button>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="card chart-card">
+                    <h3>Dead Stock Distribution by Category</h3>
+                    <div class="chart-container">
+                        <canvas id="deadStockChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <h3>Reorder Status</h3>
+                    <div class="chart-container">
+                        <canvas id="reorderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 10 High-Value Items -->
+            <div class="card">
+                <h3>Top 10 High-Value Items</h3>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Available Qty</th>
+                                <th>MRP (₹)</th>
+                                <th>Stock Value (₹)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topItemsTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="olddeadstock" class="section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>⚠️ Dead Stock Management</h2>
+                <p class="subtitle">Items requiring immediate attention</p>
+            </div>
+
+            <div class="dead-stock-summary">
+                <div class="summary-card">
+                    <span class="summary-label">Total Dead Stock Items:</span>
+                    <span class="summary-value" id="deadStockCount">6</span>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Capital Locked:</span>
+                    <span class="summary-value" id="capitalLocked">$0</span>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <select id="categoryFilter" class="form-control" onchange="filterDeadStock()">
+                    <option value="all">All Categories</option>
+                </select>
+                <button class="btn btn--outline" onclick="selectAllDeadStock()">Select All</button>
+                <button class="btn btn--secondary" onclick="bulkRemoveDeadStock()">Bulk Remove</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllCheckbox" onchange="toggleAllCheckboxes()"></th>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Available Qty</th>
+                                <th>Last Updated</th>
+                                <th>Current Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deadStockTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inventory Section -->
+    <section id="inventory" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>📦 Full Inventory</h2>
+                <p class="subtitle">Manage all your products</p>
+            </div>
+
+            <div class="inventory-controls">
+                <input type="text" id="searchInventory" class="form-control" placeholder="Search by item name..." oninput="filterInventory()">
+                <select id="categoryFilterInventory" class="form-control" onchange="filterInventory()">
+                    <option value="all">All Categories</option>
+                </select>
+                <select id="statusFilter" class="form-control" onchange="filterInventory()">
+                    <option value="all">All Status</option>
+                    <option value="Healthy">In Stock</option>
+                    <option value="Low Stock">Low Stock</option>
+                    <option value="Dead Stock">Out of Stock</option>
+                </select>
+                <button class="btn btn--primary" onclick="openAddItemModal()">+ Add New Item</button>
+                <button class="btn btn--secondary" onclick="downloadInventory()">📥 Export Excel</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllInventory" onchange="toggleAllInventoryCheckboxes()"></th>
+                                <th onclick="sortInventory('name')">Item Name ↕</th>
+                                <th onclick="sortInventory('category')">Category ↕</th>
+                                <th onclick="sortInventory('mrp')">MRP (₹) ↕</th>
+                                <th onclick="sortInventory('available_qty')">Available Qty ↕</th>
+                                <th>Stock Status</th>
+                                <th>Stock Value (₹)</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Upload Section -->
+    <section id="upload" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>📤 Data Upload</h2>
+                <p class="subtitle">Add items individually or upload in bulk</p>
+            </div>
+
+            <div class="upload-tabs">
+                <button class="tab-btn active" onclick="switchUploadTab('individual')">Add Individual Item</button>
+                <button class="tab-btn" onclick="switchUploadTab('bulk')">Bulk Upload</button>
+            </div>
+
+            <!-- Individual Upload -->
+            <div id="individualUpload" class="upload-panel active">
+                <div class="card">
+                    <h3>Add New Item</h3>
+                    <form id="addItemForm" onsubmit="addIndividualItem(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Category *</label>
+                                <select id="itemCategory" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Fruits Vegetables">Fruits Vegetables</option>
+                                    <option value="Dairy">Dairy</option>
+                                    <option value="Munchies">Munchies</option>
+                                    <option value="Personal Care">Personal Care</option>
+                                    <option value="Packaged Food">Packaged Food</option>
+                                    <option value="Beverages">Beverages</option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Bakery">Bakery</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Product Name *</label>
+                                <input type="text" id="itemName" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">MRP (₹) *</label>
+                                <input type="number" id="itemMrp" class="form-control" step="0.01" required placeholder="Enter price in Rupees">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Discount %</label>
+                                <input type="number" id="itemDiscount" class="form-control" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Available Quantity *</label>
+                                <input type="number" id="itemQty" class="form-control" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Weight (grams)</label>
+                                <input type="number" id="itemWeight" class="form-control" min="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Discounted Price (₹)</label>
+                                <input type="number" id="itemDiscountedPrice" class="form-control" step="0.01" readonly>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="itemOutOfStock">
+                                    <span>Out of Stock</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn--primary">ADD ITEM</button>
+                            <button type="button" class="btn btn--outline" onclick="resetForm()">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bulk Upload -->
+            <div id="bulkUpload" class="upload-panel">
+                <div class="card">
+                    <h3>Bulk Upload from Excel/CSV</h3>
+                    <div class="file-format-guide">
+                        <h4>📋 Template Format:</h4>
+                        <p><strong>Required columns:</strong> Category | Product Name | MRP | Available Qty</p>
+                        <p><strong>Optional columns:</strong> Discounted Price | Notes</p>
+                        <p style="font-size: var(--font-size-xs); margin-top: var(--space-8);">💡 <strong>Tip:</strong> Download the template below, fill it with your data, and upload it back!</p>
+                        <button class="btn btn--primary btn--sm" onclick="downloadTemplate()">📥 Download Excel Template</button>
+                    </div>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx" onchange="handleFileSelect(event)" style="display: none;">
+                        <div class="upload-placeholder" onclick="document.getElementById('fileInput').click()">
+                            <span style="font-size: 48px;">📁</span>
+                            <p>Click to select or drag &amp; drop your file here</p>
+                            <p class="file-types">Supports .csv and .xlsx files</p>
+                            <p style="font-size: 12px; color: var(--color-text-secondary); margin-top: 8px;">Required columns: Category, Name, MRP, Available Qty</p>
+                        </div>
+                    </div>
+                    <div id="filePreview" class="file-preview" style="display: none;">
+                        <h4>Preview</h4>
+                        <p id="fileInfo"></p>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead id="previewHeader"></thead>
+                                <tbody id="previewBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn--primary" onclick="uploadBulkData()">IMPORT &amp; UPDATE</button>
+                            <button class="btn btn--outline" onclick="clearFile()">Clear File</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hidden sections from old app -->
+    <section id="analytics" class="section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Model Analytics &amp; Performance</h2>
+                <p>Comprehensive comparison of machine learning models used in the system</p>
+            </div>
+
+            <div class="models-comparison">
+                <div class="model-card supervised">
+                    <div class="model-header">
+                        <h3>XGBoost</h3>
+                        <span class="model-badge best">Best Accuracy</span>
+                    </div>
+                    <p class="model-type">Supervised Learning</p>
+                    <div class="model-metrics">
+                        <div class="metric-row">
+                            <span>Accuracy:</span>
+                            <strong>0.9598</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Macro F1:</span>
+                            <strong>0.6848</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Macro Recall:</span>
+                            <strong>0.6489</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Execution Time:</span>
+                            <strong>16.21s</strong>
+                        </div>
+                    </div>
+                    <p class="model-description">Extreme Gradient Boosting excels at learning complex relationships in inventory data patterns.</p>
+                </div>
+
+                <div class="model-card supervised">
+                    <div class="model-header">
+                        <h3>Random Forest</h3>
+                        <span class="model-badge fastest">Fastest</span>
+                    </div>
+                    <p class="model-type">Supervised Learning</p>
+                    <div class="model-metrics">
+                        <div class="metric-row">
+                            <span>Accuracy:</span>
+                            <strong>0.9478</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Macro F1:</span>
+                            <strong>0.6255</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Macro Recall:</span>
+                            <strong>0.5930</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Execution Time:</span>
+                            <strong>0.56s</strong>
+                        </div>
+                    </div>
+                    <p class="model-description">Robust ensemble method resistant to overfitting with superior execution speed.</p>
+                </div>
+
+                <div class="model-card unsupervised">
+                    <div class="model-header">
+                        <h3>K-Means</h3>
+                        <span class="model-badge clustering">Clustering</span>
+                    </div>
+                    <p class="model-type">Unsupervised Learning</p>
+                    <div class="model-metrics">
+                        <div class="metric-row">
+                            <span>Purity:</span>
+                            <strong>0.5949</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>ARI:</span>
+                            <strong>0.3109</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>NMI:</span>
+                            <strong>0.4028</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Clusters:</span>
+                            <strong>K=9</strong>
+                        </div>
+                    </div>
+                    <p class="model-description">Partition-based clustering for ABC/XYZ classification with 9 distinct classes.</p>
+                </div>
+
+                <div class="model-card unsupervised">
+                    <div class="model-header">
+                        <h3>GMM</h3>
+                        <span class="model-badge clustering">Probabilistic</span>
+                    </div>
+                    <p class="model-type">Unsupervised Learning</p>
+                    <div class="model-metrics">
+                        <div class="metric-row">
+                            <span>Purity:</span>
+                            <strong>0.5927</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>ARI:</span>
+                            <strong>0.2933</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>NMI:</span>
+                            <strong>0.3671</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Components:</span>
+                            <strong>9</strong>
+                        </div>
+                    </div>
+                    <p class="model-description">Gaussian Mixture Model for probabilistic cluster assignment.</p>
+                </div>
+
+                <div class="model-card density">
+                    <div class="model-header">
+                        <h3>DBSCAN</h3>
+                        <span class="model-badge outlier">Outlier Detection</span>
+                    </div>
+                    <p class="model-type">Density-Based Clustering</p>
+                    <div class="model-metrics">
+                        <div class="metric-row">
+                            <span>Epsilon (eps):</span>
+                            <strong>0.5</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Min Samples:</span>
+                            <strong>10</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>PCA Variance:</span>
+                            <strong>63.38%</strong>
+                        </div>
+                        <div class="metric-row">
+                            <span>Clusters Found:</span>
+                            <strong>4 + Noise</strong>
+                        </div>
+                    </div>
+                    <p class="model-description">Identifies dead stock and anomalies through density-based spatial clustering.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="models" class="section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Machine Learning Models</h2>
+                <p>Detailed explanation of models and methodologies</p>
+            </div>
+
+            <div class="methodology-grid">
+                <div class="card">
+                    <h3>1. Data Preparation</h3>
+                    <ul class="feature-list">
+                        <li>Loaded 3,732 SKUs from Zepto dataset</li>
+                        <li>12 months of consumption data analyzed</li>
+                        <li>Feature engineering: Annual Consumption, CV, Mean Demand</li>
+                        <li>StandardScaler applied for normalization</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>2. Feature Engineering</h3>
+                    <ul class="feature-list">
+                        <li><strong>Annual Consumption:</strong> Sum of 12 monthly values</li>
+                        <li><strong>Mean Demand:</strong> Average monthly demand</li>
+                        <li><strong>CV (Coefficient of Variation):</strong> std_dev / mean</li>
+                        <li><strong>Available Quantity:</strong> Current stock levels</li>
+                        <li><strong>Price Metrics:</strong> MRP and discounted prices</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>3. Classification Strategy</h3>
+                    <p><strong>ABC Analysis:</strong> Based on Annual Value (consumption × price)</p>
+                    <ul class="feature-list">
+                        <li>Class A: Top 70% cumulative value</li>
+                        <li>Class B: Next 20% cumulative value</li>
+                        <li>Class C: Remaining 10% cumulative value</li>
+                    </ul>
+                    <p><strong>XYZ Analysis:</strong> Based on Coefficient of Variation</p>
+                    <ul class="feature-list">
+                        <li>Class X: CV &le; 0.5 (High predictability)</li>
+                        <li>Class Y: 0.5 &lt; CV &le; 1.0 (Medium predictability)</li>
+                        <li>Class Z: CV &gt; 1.0 (Low predictability)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>4. Model Training</h3>
+                    <p><strong>Supervised Models:</strong></p>
+                    <ul class="feature-list">
+                        <li>Random Forest: 100 estimators, trained on 19 features</li>
+                        <li>XGBoost: Gradient boosting with learning rate 0.1</li>
+                    </ul>
+                    <p><strong>Unsupervised Models:</strong></p>
+                    <ul class="feature-list">
+                        <li>K-Means &amp; GMM: 9 components for ABC/XYZ</li>
+                        <li>DBSCAN: eps=0.5, min_samples=10 for outliers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card code-snippet-card">
+                <h3>Sample Code: DBSCAN Implementation</h3>
+                <pre><code>import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
+from sklearn.decomposition import PCA
+
+# Load and prepare data
+df = pd.read_csv('Project IMS.csv')
+high_impact_cols = [
+    'availableQuantity', 'Annual_Consumption',
+    'outOfStock', 'mrp', 'discountedSellingPrice'
+]
+X = df[high_impact_cols].copy()
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply DBSCAN
+dbscan = DBSCAN(eps=0.5, min_samples=10)
+dbscan_labels = dbscan.fit_predict(X_scaled)
+
+# PCA for visualization
+pca = PCA(n_components=2)
+principal_components = pca.fit_transform(X_scaled)</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="classification" class="section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>ABC/XYZ Classification Matrix</h2>
+                <p>9-class inventory categorization system</p>
+            </div>
+
+            <div class="classification-matrix">
+                <div class="matrix-header">
+                    <div class="matrix-corner"></div>
+                    <div class="matrix-col-label">X<br><span>High Predictability</span></div>
+                    <div class="matrix-col-label">Y<br><span>Medium Predictability</span></div>
+                    <div class="matrix-col-label">Z<br><span>Low Predictability</span></div>
+                </div>
+
+                <div class="matrix-row">
+                    <div class="matrix-row-label">A<br><span>High Value</span></div>
+                    <div class="classification-cell ax">
+                        <div class="cell-title">AX</div>
+                        <div class="cell-desc">High value, high predictability</div>
+                        <div class="cell-strategy">Maintain optimal stock</div>
+                    </div>
+                    <div class="classification-cell ay">
+                        <div class="cell-title">AY</div>
+                        <div class="cell-desc">High value, medium predictability</div>
+                        <div class="cell-strategy">Buffer stock recommended</div>
+                    </div>
+                    <div class="classification-cell az">
+                        <div class="cell-title">AZ</div>
+                        <div class="cell-desc">High value, low predictability</div>
+                        <div class="cell-strategy">Safety stock essential</div>
+                    </div>
+                </div>
+
+                <div class="matrix-row">
+                    <div class="matrix-row-label">B<br><span>Medium Value</span></div>
+                    <div class="classification-cell bx">
+                        <div class="cell-title">BX</div>
+                        <div class="cell-desc">Medium value, high predictability</div>
+                        <div class="cell-strategy">Standard ordering</div>
+                    </div>
+                    <div class="classification-cell by">
+                        <div class="cell-title">BY</div>
+                        <div class="cell-desc">Medium value, medium predictability</div>
+                        <div class="cell-strategy">Moderate buffer</div>
+                    </div>
+                    <div class="classification-cell bz">
+                        <div class="cell-title">BZ</div>
+                        <div class="cell-desc">Medium value, low predictability</div>
+                        <div class="cell-strategy">Close monitoring</div>
+                    </div>
+                </div>
+
+                <div class="matrix-row">
+                    <div class="matrix-row-label">C<br><span>Low Value</span></div>
+                    <div class="classification-cell cx">
+                        <div class="cell-title">CX</div>
+                        <div class="cell-desc">Low value, high predictability</div>
+                        <div class="cell-strategy">Minimal inventory</div>
+                    </div>
+                    <div class="classification-cell cy">
+                        <div class="cell-title">CY</div>
+                        <div class="cell-desc">Low value, medium predictability</div>
+                        <div class="cell-strategy">As-needed ordering</div>
+                    </div>
+                    <div class="classification-cell cz">
+                        <div class="cell-title">CZ</div>
+                        <div class="cell-desc">Low value, low predictability</div>
+                        <div class="cell-strategy">Just-in-time</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="card">
+                    <h3>Key Features Used</h3>
+                    <div class="feature-item">
+                        <div class="feature-header">
+                            <strong>Annual Consumption</strong>
+                            <span class="importance high">High</span>
+                        </div>
+                        <p>Total consumption over 12 months</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-header">
+                            <strong>Available Quantity</strong>
+                            <span class="importance high">High</span>
+                        </div>
+                        <p>Current stock level at point of analysis</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-header">
+                            <strong>Coefficient of Variation</strong>
+                            <span class="importance critical">Critical</span>
+                        </div>
+                        <p>CV ratio for XYZ classification</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-header">
+                            <strong>MRP &amp; Discounted Price</strong>
+                            <span class="importance high">High</span>
+                        </div>
+                        <p>Pricing metrics for value calculation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dead Stock Section -->
+    <section id="deadstock" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>⚠️ Dead Stock Management</h2>
+                <p class="subtitle">Product inventory analysis by category</p>
+            </div>
+
+            <!-- Sub-tabs for Dead Stock -->
+            <div class="upload-tabs">
+                <button class="tab-btn active" onclick="switchDeadStockTab('deadstock-products')">Dead Stock Products</button>
+                <button class="tab-btn" onclick="switchDeadStockTab('outofstock-products')">Out of Stock</button>
+                <button class="tab-btn" onclick="switchDeadStockTab('slowmoving-products')">Slow Moving</button>
+            </div>
+
+            <!-- Dead Stock Products Tab -->
+            <div id="deadstock-products" class="deadstock-panel active">
+                <div class="dead-stock-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Dead Stock Products Found:</span>
+                        <span class="summary-value" id="deadStockProductsCount">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Total Capital Locked:</span>
+                        <span class="summary-value" id="deadStockCapitalLocked">₹0</span>
+                    </div>
+                </div>
+
+                <!-- Dead Stock Value Breakdown -->
+                <div class="dead-stock-breakdown">
+                    <h4>💡 Dead Stock Analysis</h4>
+                    <div class="breakdown-content">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Total Dead Stock Value:</span>
+                            <span class="breakdown-value" id="deadStockTotalValue">₹0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Items by Category:</span>
+                            <div id="deadStockByCategory" class="category-breakdown"></div>
+                        </div>
+                        <div class="recommendation-message" id="deadStockRecommendation">
+                            <!-- Dynamic recommendation -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>MRP</th>
+                                    <th>Last Stocked</th>
+                                    <th>Capital Locked</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deadStockProductsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Out of Stock Tab -->
+            <div id="outofstock-products" class="deadstock-panel">
+                <div class="dead-stock-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Out of Stock Products:</span>
+                        <span class="summary-value" id="outOfStockProductsCount">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Estimated Reorder Cost:</span>
+                        <span class="summary-value" id="outOfStockReorderCost">₹0</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>MRP</th>
+                                    <th>Days Out</th>
+                                    <th>Reorder Qty Suggested</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outOfStockProductsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slow Moving Products Tab -->
+            <div id="slowmoving-products" class="deadstock-panel">
+                <div class="dead-stock-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Slow Moving Products:</span>
+                        <span class="summary-value" id="slowMovingProductsCount">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Total Value in Slow Moving:</span>
+                        <span class="summary-value" id="slowMovingTotalValue">₹0</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Available Qty</th>
+                                    <th>MRP</th>
+                                    <th>Stock Value</th>
+                                    <th>Velocity Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="slowMovingProductsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clusters-grid" style="display: none;">
+                <div class="cluster-card cluster-0">
+                    <div class="cluster-header">
+                        <h3>Cluster 0: Steady Stock</h3>
+                        <span class="cluster-percentage">78%</span>
+                    </div>
+                    <div class="risk-badge low">Low Risk</div>
+                    <p class="cluster-description">Items with steady stock levels and robust demand patterns. These represent the majority of well-performing inventory.</p>
+                    <div class="cluster-action">
+                        <strong>Action:</strong> Maintain current levels
+                    </div>
+                </div>
+
+                <div class="cluster-card cluster-1">
+                    <div class="cluster-header">
+                        <h3>Cluster 1: High Capital Risk</h3>
+                        <span class="cluster-percentage">8%</span>
+                    </div>
+                    <div class="risk-badge high">High Risk</div>
+                    <p class="cluster-description">Valuable items that take a long time to sell. High capital tied up with slow movement creates significant risk.</p>
+                    <div class="cluster-action">
+                        <strong>Action:</strong> Promotional clearance needed
+                    </div>
+                </div>
+
+                <div class="cluster-card cluster-2">
+                    <div class="cluster-header">
+                        <h3>Cluster 2: Low-Risk Slow Movers</h3>
+                        <span class="cluster-percentage">8%</span>
+                    </div>
+                    <div class="risk-badge medium">Medium Risk</div>
+                    <p class="cluster-description">High volume items that can be cleared relatively easily despite slower movement patterns.</p>
+                    <div class="cluster-action">
+                        <strong>Action:</strong> Monitor closely
+                    </div>
+                </div>
+
+                <div class="cluster-card cluster-3">
+                    <div class="cluster-header">
+                        <h3>Cluster 3: Dead Stock</h3>
+                        <span class="cluster-percentage">3%</span>
+                    </div>
+                    <div class="risk-badge critical">Critical</div>
+                    <p class="cluster-description">Items with zero consumption and no demand. Represents wasted capital and storage space.</p>
+                    <div class="cluster-action">
+                        <strong>Action:</strong> Immediate review required
+                    </div>
+                </div>
+
+                <div class="cluster-card cluster-noise">
+                    <div class="cluster-header">
+                        <h3>Anomalies (Noise)</h3>
+                        <span class="cluster-percentage">3%</span>
+                    </div>
+                    <div class="risk-badge review">Review</div>
+                    <p class="cluster-description">Items with sparse feature profiles that don't fit standard patterns. Require individual assessment.</p>
+                    <div class="cluster-action">
+                        <strong>Action:</strong> Individual management review
+                    </div>
+                </div>
+            </div>
+
+            <div class="pca-info-card">
+                <h3>PCA Visualization Details</h3>
+                <p>Principal Component Analysis reduces 5-dimensional feature space to 2D for visualization:</p>
+                <div class="pca-metrics">
+                    <div class="pca-metric">
+                        <span>PC1 Variance Explained:</span>
+                        <strong>~40%</strong>
+                    </div>
+                    <div class="pca-metric">
+                        <span>PC2 Variance Explained:</span>
+                        <strong>~23%</strong>
+                    </div>
+                    <div class="pca-metric">
+                        <span>Total Variance Captured:</span>
+                        <strong>63.38%</strong>
+                    </div>
+                </div>
+                <p class="pca-note">The 2D projection captures approximately 63% of the total variance, providing meaningful visual representation of cluster separation.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>👥 Research &amp; Development Team</h2>
+                <p class="subtitle">Smart Inventory Management System | Chandigarh University</p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">A</div>
+                    <h3>Aditi</h3>
+                    <p class="team-role">Researcher</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:23BCB10001@cuchd.in" class="team-email">23BCB10001@cuchd.in</a>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">AR</div>
+                    <h3>Aryan Rana</h3>
+                    <p class="team-role">Researcher</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:23BCB10018@cuchd.in" class="team-email">23BCB10018@cuchd.in</a>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">NP</div>
+                    <h3>Naitik Pathak</h3>
+                    <p class="team-role">Researcher</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:23BCB10041@cuchd.in" class="team-email">23BCB10041@cuchd.in</a>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">D</div>
+                    <h3>Divya</h3>
+                    <p class="team-role">Researcher</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:23BCB10019@cuchd.in" class="team-email">23BCB10019@cuchd.in</a>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">PJ</div>
+                    <h3>Palak Jain</h3>
+                    <p class="team-role">Researcher</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:23BCB10006@cuchd.in" class="team-email">23BCB10006@cuchd.in</a>
+                </div>
+
+                <div class="team-card advisor">
+                    <div class="team-avatar">GS</div>
+                    <h3>Gurwinder Singh</h3>
+                    <p class="team-role">Faculty Advisor</p>
+                    <p class="team-dept">Department of AITCSE</p>
+                    <p class="team-uni">Chandigarh University</p>
+                    <a href="mailto:gurwinder.e11253@cumail.in" class="team-email">gurwinder.e11253@cumail.in</a>
+                </div>
+            </div>
+
+            <div class="acknowledgment-card">
+                <h3>About This Research</h3>
+                <p>This project represents a comprehensive study on Smart Inventory Management Systems for retail businesses. Developed as part of research at the Department of AITCSE, Chandigarh University, Punjab, India.</p>
+                <p>The system provides real-time inventory tracking, dead stock detection, and actionable insights for inventory optimization. The platform helps retail shop owners make data-driven decisions to improve stock management and reduce capital locked in slow-moving or dead stock items.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for editing items -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeEditModal()">&times;</span>
+            <h3>Edit Item</h3>
+            <form id="editItemForm" onsubmit="saveEditedItem(event)">
+                <input type="hidden" id="editItemId">
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" id="editItemName" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">MRP</label>
+                        <input type="number" id="editItemMrp" class="form-control" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Available Quantity</label>
+                        <input type="number" id="editItemQty" class="form-control" min="0" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">Save Changes</button>
+                    <button type="button" class="btn btn--outline" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>📊 Retail Shop Inventory Manager</h4>
+                    <p>Simple, powerful inventory management for small retail shops</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <p>Dashboard • Dead Stock Tracking • Full Inventory • Data Upload</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Data Storage</h4>
+                    <p>All data is stored locally in your browser</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Retail Shop Inventory Manager. Made for small business owners.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
