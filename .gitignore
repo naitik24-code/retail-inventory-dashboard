@@ -1,0 +1,27 @@
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Database
+inventory.db
+inventory.db-journal
+
+# Media / Recordings
+*.mp4
+*.webm
+*.webp
+
+# IDEs
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/

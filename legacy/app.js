@@ -1,3 +1,5 @@
+import { showToast, showModal } from './src/ui.js';
+
 // Classification thresholds
 const THRESHOLDS = {
   HEALTHY_MIN_QTY: 5,
@@ -491,12 +493,19 @@ function restoreItem(id) {
     item.available_qty = 10;
     item.last_updated = new Date().toISOString().split('T')[0];
     refreshAll();
-    alert(`${item.name} restored with 10 units!`);
+    showToast(`${item.name} restored with 10 units!`);
   }
 }
 
-function markDiscontinued(id) {
-  if (confirm('Mark this product as discontinued?')) {
+async function markDiscontinued(id) {
+  const confirmed = await showModal({
+    type: 'confirm',
+    title: 'Mark as Discontinued',
+    message: 'Mark this product as discontinued?',
+    confirmLabel: 'Discontinue',
+    cancelLabel: 'Cancel'
+  });
+  if (confirmed) {
     removeItem(id);
   }
 }
@@ -504,19 +513,26 @@ function markDiscontinued(id) {
 function promoteItem(id) {
   const item = inventoryData.find(i => i.id === id);
   if (item) {
-    alert(`Promotion campaign started for ${item.name}!\n\nSuggested actions:\n- Feature on homepage\n- Social media promotion\n- Email campaign to customers`);
+    showToast(`Promotion campaign started for ${item.name}!<br><br>Suggested actions:<br>- Feature on homepage<br>- Social media promotion<br>- Email campaign to customers`);
   }
 }
 
-function applyDiscount(id) {
+async function applyDiscount(id) {
   const item = inventoryData.find(i => i.id === id);
   if (item) {
-    const discount = prompt(`Apply discount for ${item.name}\nCurrent discount: ${item.discount_percent}%\nEnter new discount % (0-50):`, item.discount_percent);
-    if (discount && !isNaN(discount) && discount >= 0 && discount <= 50) {
+    const discount = await showModal({
+      type: 'prompt',
+      title: 'Apply Discount',
+      message: `Apply discount for ${item.name}\nCurrent discount: ${item.discount_percent}%\nEnter new discount % (0-50):`,
+      defaultValue: String(item.discount_percent),
+      confirmLabel: 'Apply',
+      cancelLabel: 'Cancel'
+    });
+    if (discount !== null && !isNaN(discount) && discount >= 0 && discount <= 50) {
       item.discount_percent = parseFloat(discount);
       item.discounted_price = item.mrp - (item.mrp * discount / 100);
       refreshAll();
-      alert(`${discount}% discount applied to ${item.name}!`);
+      showToast(`${discount}% discount applied to ${item.name}!`);
     }
   }
 }
@@ -545,16 +561,23 @@ function selectAllDeadStock() {
   toggleAllCheckboxes();
 }
 
-function bulkRemoveDeadStock() {
+async function bulkRemoveDeadStock() {
   const selected = Array.from(document.querySelectorAll('.dead-stock-checkbox:checked')).map(cb => parseInt(cb.dataset.id));
   if (selected.length === 0) {
-    alert('Please select items to remove');
+    showToast('Please select items to remove', 'warning');
     return;
   }
-  if (confirm(`Remove ${selected.length} items?`)) {
+  const confirmed = await showModal({
+    type: 'confirm',
+    title: 'Remove Dead Stock',
+    message: `Remove ${selected.length} items?`,
+    confirmLabel: 'Remove',
+    cancelLabel: 'Cancel'
+  });
+  if (confirmed) {
     inventoryData = inventoryData.filter(i => !selected.includes(i.id));
     refreshAll();
-    alert(`${selected.length} items removed successfully!`);
+    showToast(`${selected.length} items removed successfully!`);
   }
 }
 
@@ -564,7 +587,7 @@ function markAsSold(id) {
     item.status = 'Healthy';
     item.available_qty = 10;
     refreshAll();
-    alert(`${item.name} marked as sold and restocked!`);
+    showToast(`${item.name} marked as sold and restocked!`);
   }
 }
 
@@ -801,13 +824,20 @@ function saveEditedItem(e) {
     
     refreshAll();
     closeEditModal();
-    alert('Item updated successfully!');
+    showToast('Item updated successfully!');
   }
 }
 
-function removeItem(id) {
+async function removeItem(id) {
   const item = inventoryData.find(i => i.id === id);
-  if (confirm(`Are you sure you want to remove "${item?.name}"?`)) {
+  const confirmed = await showModal({
+    type: 'confirm',
+    title: 'Remove Item',
+    message: `Are you sure you want to remove "${item?.name}"?`,
+    confirmLabel: 'Remove',
+    cancelLabel: 'Cancel'
+  });
+  if (confirmed) {
     inventoryData = inventoryData.filter(i => i.id !== id);
     filteredInventory = [...inventoryData];
     refreshAll();
@@ -815,16 +845,23 @@ function removeItem(id) {
   }
 }
 
-function reorderItem(id) {
+async function reorderItem(id) {
   const item = inventoryData.find(i => i.id === id);
   if (item) {
-    const qty = prompt(`Reorder ${item.name}. Enter quantity:`, '10');
-    if (qty && !isNaN(qty) && parseInt(qty) > 0) {
+    const qty = await showModal({
+      type: 'prompt',
+      title: 'Reorder Item',
+      message: `Reorder ${item.name}. Enter quantity:`,
+      defaultValue: '10',
+      confirmLabel: 'Reorder',
+      cancelLabel: 'Cancel'
+    });
+    if (qty !== null && !isNaN(qty) && parseInt(qty) > 0) {
       item.available_qty += parseInt(qty);
       item.status = 'Healthy';
       item.last_updated = new Date().toISOString().split('T')[0];
       refreshAll();
-      alert(`${qty} units added to ${item.name}!`);
+      showToast(`${qty} units added to ${item.name}!`);
     }
   }
 }
@@ -911,7 +948,7 @@ function handleFileSelect(event) {
       const data = new Uint8Array(e.target.result);
       parseExcelData(data, fileName);
     } else {
-      alert('Unsupported file format. Please upload .csv or .xlsx files.');
+      showToast('Unsupported file format. Please upload .csv or .xlsx files.', 'error');
     }
   };
   
@@ -925,7 +962,7 @@ function handleFileSelect(event) {
 function parseCSVData(csvText, fileName) {
   const lines = csvText.split('\n').filter(line => line.trim());
   if (lines.length < 2) {
-    alert('CSV file is empty or invalid!');
+    showToast('CSV file is empty or invalid!', 'error');
     return;
   }
   
@@ -934,7 +971,7 @@ function parseCSVData(csvText, fileName) {
   const missingHeaders = requiredHeaders.filter(h => !headers.some(header => header.includes(h.replace(' ', ''))));
   
   if (missingHeaders.length > 0) {
-    alert(`Missing required columns: ${missingHeaders.join(', ')}\n\nRequired columns: Category, Name, MRP, Available Qty`);
+    showToast(`Missing required columns: ${missingHeaders.join(', ')}<br><br>Required columns: Category, Name, MRP, Available Qty`, 'error');
     return;
   }
   
@@ -983,7 +1020,7 @@ function parseExcelData(data, fileName) {
     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
     
     if (jsonData.length < 2) {
-      alert('Excel file is empty or invalid!');
+      showToast('Excel file is empty or invalid!', 'error');
       return;
     }
     
@@ -992,7 +1029,7 @@ function parseExcelData(data, fileName) {
     parseCSVData(csvText, fileName);
   } catch (error) {
     console.error('Error parsing Excel file:', error);
-    alert('Error reading Excel file. Please make sure it is a valid .xlsx file.');
+    showToast('Error reading Excel file. Please make sure it is a valid .xlsx file.', 'error');
   }
 }
 
@@ -1004,7 +1041,7 @@ function clearFile() {
 
 function uploadBulkData() {
   if (!window.pendingCSVData) {
-    alert('No file data found. Please select a file first.');
+    showToast('No file data found. Please select a file first.', 'error');
     return;
   }
   
@@ -1077,7 +1114,7 @@ function uploadBulkData() {
   }
   
   if (newItems.length === 0) {
-    alert('No valid items found in the CSV file. Please check your data.');
+    showToast('No valid items found in the CSV file. Please check your data.', 'error');
     return;
   }
   
