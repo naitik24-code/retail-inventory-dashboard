@@ -3,15 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Retail Shop Inventory Manager</title>
+    <meta name="description" content="A calmer way to track retail inventory, spot low stock, and make your next move.">
+    <title>Stockwise — Retail inventory, made clearer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="src/ml-styles.css">
+    <link rel="stylesheet" href="src/refresh.css?v=20261027-5">
 </head>
 <body>
+    <main id="publicSite" class="public-site">
+        <header class="public-nav">
+            <a class="brand-lockup" href="#home" data-show-home aria-label="Stockwise home">
+                <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V4m8 15v-7"/><path d="m3 6 5-3 5 4 7-4"/></svg></span>
+                <span>stockwise<span class="brand-period">.</span></span>
+            </a>
+            <nav class="public-nav-links" aria-label="Main navigation">
+                <a href="#features">Features</a><a href="#how-it-works">How it works</a>
+            </nav>
+            <button class="public-login" type="button" data-show-login>Log in <span aria-hidden="true">↗</span></button>
+        </header>
+
+        <section id="home" class="landing-hero">
+            <div class="hero-copy">
+                <div class="eyebrow"><span class="eyebrow-dot"></span> INVENTORY, IN BETTER SHAPE</div>
+                <h1>Know what’s<br>on your <span>shelves.</span></h1>
+                <p>Less guesswork. Fewer empty shelves. A calmer way to run your store’s inventory, from one simple workspace.</p>
+                <div class="hero-actions">
+                    <button class="btn btn--primary hero-cta" type="button" data-show-login>Open your workspace <span aria-hidden="true">→</span></button>
+                    <a class="text-link" href="#features">Take a look <span aria-hidden="true">↓</span></a>
+                </div>
+                <div class="hero-proof"><div class="proof-avatars"><span>R</span><span>M</span><span>A</span></div><span>Made for the people who keep<br>their neighborhood running.</span></div>
+            </div>
+
+            <div class="hero-visual" aria-label="Preview of the inventory workspace">
+                <div class="preview-window">
+                    <div class="preview-sidebar">
+                        <div class="preview-brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V4m8 15v-7"/></svg></span><b>stockwise</b></div>
+                        <span class="preview-label">WORKSPACE</span>
+                        <div class="preview-nav active"><span>▦</span> Overview</div><div class="preview-nav"><span>◫</span> Inventory</div><div class="preview-nav"><span>⌁</span> Insights</div>
+                        <div class="preview-sidebar-bottom"><span class="preview-avatar">JD</span><span><b>Jordan Davis</b><small>Store manager</small></span></div>
+                    </div>
+                    <div class="preview-main">
+                        <div class="preview-top"><div><small>MONDAY, OCTOBER 27</small><h3>Good morning, Jordan <span>✳</span></h3></div><span class="preview-live"><i></i> Live data</span></div>
+                        <div class="preview-kpis"><div><small>Stock value</small><b>₹8,42,680</b><em class="positive">↗ 8.2%</em></div><div><small>Products</small><b>1,284</b><em>Across 12 categories</em></div><div><small>Need attention</small><b>08</b><em class="attention">3 need restocking</em></div></div>
+                        <div class="preview-chart-card"><div class="chart-title"><span><b>Stock movement</b><small>Inventory value over time</small></span><small class="chart-filter">Last 7 days⌄</small></div><svg class="preview-chart" viewBox="0 0 560 145" preserveAspectRatio="none" role="img" aria-label="Rising stock value chart"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5ab59c" stop-opacity=".25"/><stop offset="1" stop-color="#5ab59c" stop-opacity="0"/></linearGradient></defs><path d="M0 115 C35 108 48 114 80 95 S125 108 157 80 S200 91 233 67 S280 83 311 55 S350 70 385 45 S425 58 455 30 S508 45 560 12 V145 H0Z" fill="url(#chartFill)"/><path d="M0 115 C35 108 48 114 80 95 S125 108 157 80 S200 91 233 67 S280 83 311 55 S350 70 385 45 S425 58 455 30 S508 45 560 12" fill="none" stroke="#408d79" stroke-width="3" stroke-linecap="round"/></svg><div class="chart-days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div>
+                        <div class="preview-alert"><span class="alert-icon">↗</span><span><b>Restock soon</b><small>3 products are running low</small></span><span class="alert-arrow">→</span></div>
+                    </div>
+                </div>
+                <div class="floating-note"><span>✳</span><span><b>A little more clarity.</b><small>Every day, in real time.</small></span></div>
+            </div>
+            <a class="scroll-cue" href="#features"><span></span> SCROLL TO EXPLORE</a>
+        </section>
+
+        <section id="features" class="feature-section">
+            <div class="section-kicker">A BETTER WAY TO KEEP TRACK</div>
+            <div class="feature-heading"><h2>Running a store is<br>already <span>enough work.</span></h2><p>Stockwise brings your products, stock levels, and next steps together—so the numbers feel less like another job.</p></div>
+            <div class="feature-grid">
+                <article class="feature-card feature-card-large"><span class="feature-number">01 / SEE CLEARLY</span><div class="feature-icon mint">▤</div><h3>Your whole store,<br>at a glance.</h3><p>One live view of what you have, what’s moving, and what needs your attention today.</p><div class="mini-stack"><span>Everything in its place</span><b>→</b></div></article>
+                <article class="feature-card feature-card-warm"><span class="feature-number">02 / STAY AHEAD</span><div class="feature-icon cream">↗</div><h3>Catch low stock<br>before it’s gone.</h3><p>Get a timely nudge when popular items are running low, before a customer finds an empty shelf.</p><div class="mini-stock"><span>House blend coffee</span><span class="stock-low"><i></i> Running low</span></div></article>
+                <article class="feature-card feature-card-wide"><span class="feature-number">03 / MAKE IT SIMPLE</span><div class="wide-feature-content"><div><h3>Bring your list.<br>We’ll take it from here.</h3><p>Start with a spreadsheet you already have. Import it in a few clicks and get straight to the useful part.</p></div><div class="upload-illustration"><span class="upload-file">CSV</span><span class="upload-arrow">→</span><span class="upload-done">✓</span></div></div></article>
+            </div>
+        </section>
+        <section id="how-it-works" class="closing-section"><div><span class="section-kicker">A CLEARER DAY STARTS HERE</span><h2>Make room for the<br>good part of <span>running a store.</span></h2></div><button class="btn btn--primary hero-cta" type="button" data-show-login>Step into Stockwise <span aria-hidden="true">→</span></button></section>
+        <footer class="public-footer"><a class="brand-lockup" href="#home"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V4m8 15v-7"/></svg></span><span>stockwise<span class="brand-period">.</span></span></a><span>A little more clarity for everyday retail.</span><span>© 2026 Stockwise</span></footer>
+    </main>
+
+    <main id="loginView" class="login-view" hidden>
+        <button class="login-back" type="button" data-show-home>← <span>Back to home</span></button>
+        <div class="login-layout">
+            <div class="login-story"><a class="brand-lockup" href="#home" data-show-home><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V4m8 15v-7"/></svg></span><span>stockwise<span class="brand-period">.</span></span></a><div><span class="section-kicker">YOUR STORE, IN GOOD HANDS</span><h1>Good things<br>start with a<br><span>clear picture.</span></h1><p>Sign in to see your inventory, follow the numbers, and get on with your day.</p></div><div class="login-quote"><span>“</span><p>The right stock, at the right time. It’s one less thing to worry about.</p></div></div>
+            <div class="login-panel"><form id="loginForm" class="login-form"><div class="login-form-mark">✳</div><span class="section-kicker">WELCOME BACK</span><h2>Sign in to Stockwise</h2><p class="login-subtitle">Your inventory is right where you left it.</p><label for="loginEmail">Work email</label><div class="login-input-wrap"><span>✉</span><input id="loginEmail" type="email" placeholder="you@yourstore.com" autocomplete="email" required></div><label for="loginPassword">Password</label><div class="login-input-wrap"><span>⌑</span><input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" id="togglePassword" aria-label="Show password">Show</button></div><div id="loginError" class="login-error" aria-live="polite"></div><button class="login-submit" type="submit">Continue to workspace <span>→</span></button><p class="login-demo-note">Preview mode · Any email and password will open this local demo.</p></form><div class="login-copyright">© 2026 Stockwise · Made for independent retail</div></div>
+        </div>
+    </main>
+
+    <div id="appShell" hidden>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
+                <a class="workspace-brand-link" href="#home" data-show-home aria-label="Return to Stockwise home">
                 <div class="logo-wrapper">
                     <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -19,7 +88,8 @@
                         <line x1="6" y1="20" x2="6" y2="14"></line>
                     </svg>
                 </div>
-                <span class="nav-title">RetailIMS</span>
+                <span class="nav-title">stockwise<span class="brand-period">.</span></span>
+                </a>
                 <div id="apiStatus" class="api-status" title="Backend Connection Status">
                     <span class="status-dot"></span>
                     <span class="status-text">Connecting...</span>
@@ -44,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="themeToggle" class="nav-icon-btn" title="Toggle Dark Mode">
+                <button id="themeToggleQuick" class="nav-icon-btn" title="Toggle Dark Mode">
                     <svg class="nav-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     <svg class="nav-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
@@ -87,6 +157,15 @@
                     </a>
                 </li>
             </ul>
+            <button id="mobileMoreButton" class="mobile-more-button" type="button" aria-expanded="false" aria-controls="mobileMoreMenu">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+                <span>More</span>
+            </button>
+            <div id="mobileMoreMenu" class="mobile-more-menu">
+                <a href="#upload" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></svg>Data Upload</a>
+                <a href="#analytics" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9m8 10V4m8 15v-7"/></svg>ML Analytics</a>
+                <a href="#team" class="nav-link"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2m3-13a4 4 0 0 1 0 8"/></svg>Team</a>
+            </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -103,6 +182,11 @@
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </button>
+            <div class="sidebar-account">
+                <span class="sidebar-avatar" id="sidebarAvatar">JD</span>
+                <span class="sidebar-user"><b id="sidebarUserName">Store manager</b><small>Workspace</small></span>
+                <button id="logoutButton" class="logout-button" type="button" title="Sign out" aria-label="Sign out">↗</button>
+            </div>
         </div>
     </nav>
 
@@ -284,6 +368,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="deadStockPagination" class="pagination"></div>
                 </div>
                 <div class="dead-stock-breakdown">
                     <div class="card">
@@ -320,6 +405,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="outOfStockPagination" class="pagination"></div>
                     <div class="panel-footer">
                         <span>Estimated Reorder Cost: <strong id="outOfStockReorderCost">₹0.00</strong></span>
                     </div>
@@ -346,6 +432,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="slowMovingPagination" class="pagination"></div>
                     <div class="panel-footer">
                         <span>Total Slow Moving Value: <strong id="slowMovingTotalValue">₹0.00</strong></span>
                     </div>
@@ -558,8 +645,8 @@
 
             <div class="acknowledgment-card">
                 <h3>Our Mission</h3>
-                <p>RetailIMS is dedicated to empowering small and medium-sized retail businesses with enterprise-grade inventory management tools. We believe that smart inventory insights should be accessible to everyone, not just large corporations.</p>
-                <p>By leveraging intelligent analytics and real-time tracking, we help store owners optimize their stock levels, minimize dead stock, and focus on what truly matters: growing their business and serving their customers.</p>
+                <p>Stockwise helps small and independent retailers keep a clearer view of their shelves, spot slow-moving products, and make confident day-to-day decisions.</p>
+                <p>Bring together your stock list, useful alerts, and inventory trends in one straightforward workspace built around the realities of running a store.</p>
             </div>
         </div>
     </section>
@@ -598,8 +685,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>RetailIMS</h4>
-                    <p>Simple, powerful inventory management for small retail shops</p>
+                    <h4>Stockwise</h4>
+                    <p>A clearer way to manage everyday inventory</p>
                 </div>
                 <div class="footer-section">
                     <h4>Features</h4>
@@ -611,13 +698,14 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Retail Shop Inventory Manager. Made for small business owners.</p>
+                <p>&copy; 2026 Stockwise. Made for independent retailers.</p>
             </div>
         </div>
     </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/main.js?v=20261027-6"></script>
 </body>
 </html>

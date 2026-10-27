@@ -7,6 +7,32 @@
 import { getInventory } from './state.js';
 import { formatCurrency, formatDate, daysDifference, classifyProduct } from './utils.js';
 
+const DEAD_STOCK_PAGE_SIZE = 25;
+const _deadStockPages = { deadstock: 1, outofstock: 1, slowmoving: 1 };
+
+function _pageItems(items, key, paginationId) {
+  const pageCount = Math.max(1, Math.ceil(items.length / DEAD_STOCK_PAGE_SIZE));
+  _deadStockPages[key] = Math.min(_deadStockPages[key], pageCount);
+  const page = _deadStockPages[key];
+  const pagination = document.getElementById(paginationId);
+  if (pagination) {
+    pagination.innerHTML = pageCount <= 1 ? '' : `
+      <button onclick="changeDeadStockPage('${key}', ${page - 1})" ${page === 1 ? 'disabled' : ''}>Previous</button>
+      <span>Page ${page} of ${pageCount}</span>
+      <button onclick="changeDeadStockPage('${key}', ${page + 1})" ${page === pageCount ? 'disabled' : ''}>Next</button>`;
+  }
+  const offset = (page - 1) * DEAD_STOCK_PAGE_SIZE;
+  return items.slice(offset, offset + DEAD_STOCK_PAGE_SIZE);
+}
+
+export function changeDeadStockPage(key, page) {
+  if (!Object.hasOwn(_deadStockPages, key)) return;
+  _deadStockPages[key] = Math.max(1, page);
+  if (key === 'deadstock') _renderDeadStockProducts();
+  else if (key === 'outofstock') _renderOutOfStockProducts();
+  else _renderSlowMovingProducts();
+}
+
 // ---------------------------------------------------------------------------
 // Navigation
 // ---------------------------------------------------------------------------
@@ -19,16 +45,20 @@ import { formatCurrency, formatDate, daysDifference, classifyProduct } from './u
  * @returns {void}
  */
 export function navigateTo(sectionId) {
+  if (window.location.hash !== `#${sectionId}`) {
+    window.history.replaceState(window.history.state, '', `#${sectionId}`);
+  }
+
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('.section');
 
   navLinks.forEach(l => l.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
 
-  const activeLink = document.querySelector(`a[href="#${sectionId}"]`);
+  const activeLinks = document.querySelectorAll(`a[href="#${sectionId}"]`);
   const targetSection = document.getElementById(sectionId);
 
-  if (activeLink) activeLink.classList.add('active');
+  activeLinks.forEach(link => link.classList.add('active'));
   if (targetSection) {
     targetSection.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -114,7 +144,7 @@ export function renderAlerts(alerts) {
   }
 
   if (badge) {
-    badge.textContent = alerts.length;
+    badge.textContent = alerts.length > 99 ? '99+' : alerts.length;
     badge.style.display = 'flex';
   }
 
@@ -215,13 +245,14 @@ function _renderDeadStockProducts() {
   _updateDeadStockBreakdown(deadStock);
 
   if (!tbody) return;
+  const pageItems = _pageItems(deadStock, 'deadstock', 'deadStockPagination');
 
   if (deadStock.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--color-text-secondary);">No dead stock products found. Great job!</td></tr>';
     return;
   }
 
-  tbody.innerHTML = deadStock.map(item => {
+  tbody.innerHTML = pageItems.map(item => {
     const qty = Number(item.available_qty) || 0;
     const price = Number(item.mrp) || 0;
     return `
@@ -262,13 +293,14 @@ function _renderOutOfStockProducts() {
   if (reorderEl) reorderEl.textContent = formatCurrency(reorderCost);
 
   if (!tbody) return;
+  const pageItems = _pageItems(outOfStock, 'outofstock', 'outOfStockPagination');
 
   if (outOfStock.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--color-text-secondary);">No out of stock products found.</td></tr>';
     return;
   }
 
-  tbody.innerHTML = outOfStock.map(item => {
+  tbody.innerHTML = pageItems.map(item => {
     const daysOut = daysDifference(item.last_updated);
     const price = Number(item.mrp) || 0;
     return `
@@ -310,13 +342,14 @@ function _renderSlowMovingProducts() {
   if (valueEl) valueEl.textContent = formatCurrency(totalValue);
 
   if (!tbody) return;
+  const pageItems = _pageItems(slowMoving, 'slowmoving', 'slowMovingPagination');
 
   if (slowMoving.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--color-text-secondary);">No slow moving products found.</td></tr>';
     return;
   }
 
-  tbody.innerHTML = slowMoving.map(item => {
+  tbody.innerHTML = pageItems.map(item => {
     const qty = Number(item.available_qty) || 0;
     const price = Number(item.mrp) || 0;
     const stockValue = qty * price;
@@ -930,7 +963,7 @@ export function renderAnalytics(data) {
       </div>
       <div class="analytics-card">
         <h4>🧠 Anomaly Distribution</h4>
-        <p class="analytics-subtitle">Based on active ML-based alerts</p>
+        <p class="analytics-subtitle">Risk levels across anomaly-flagged inventory</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
           <span class="risk-badge critical">High: ${anomalyHigh}</span>
           <span class="risk-badge medium">Medium: ${anomalyMed}</span>

@@ -24,15 +24,16 @@ import {
   openEditModal,
   closeEditModal,
   changePage,
+  changeDeadStockPage,
   setFilteredInventory,
   setTotalInventoryCount,
   setLoadPageHandler,
   getFilteredInventory,
   renderAnalytics,
   renderAlerts,
-} from './ui.js';
+} from './ui.js?v=20261027-5';
 
-import { initCharts, updateCharts } from './charts.js';
+import { initCharts, updateCharts } from './charts.js?v=20261027-2';
 import { classifyProduct } from './utils.js';
 import { CONFIG } from './config.js';
 import {
@@ -125,16 +126,14 @@ async function syncInventoryAllFromBackend() {
       return;
     }
 
-    const pageSize = 250;
-    const allItems = [];
-    for (let offset = 0; offset < total; offset += pageSize) {
-      const page = await fetchInventory({ limit: pageSize, offset });
-      if (Array.isArray(page) && page.length > 0) {
-        allItems.push(...page);
-      }
-      // Small guard: if fallback to local state returns the whole array, stop.
-      if (Array.isArray(page) && page.length < pageSize && allItems.length >= total) break;
-    }
+    const pageSize = 500;
+    const offsets = Array.from({ length: Math.ceil(total / pageSize) }, (_, i) => i * pageSize);
+    const pages = await Promise.all(offsets.map(offset => fetchInventory({ limit: pageSize, offset })));
+    const complete = pages.every((page, index) =>
+      Array.isArray(page) && page.length === Math.min(pageSize, total - offsets[index])
+    );
+    if (!complete) return;
+    const allItems = pages.flatMap(page => Array.isArray(page) ? page : []);
 
     if (allItems.length > 0) {
       setInventory(allItems);
@@ -773,12 +772,9 @@ function toggleAllInventoryCheckboxes() {
 // ---------------------------------------------------------------------------
 window.navigateTo = (sectionId) => {
   navigateTo(sectionId);
-  // Refresh analytics whenever the analytics section is opened
-  if (sectionId === 'analytics') {
-    fetchAnalytics().then(data => renderAnalytics(data));
-  }
 };
 window.changePage = changePage;
+window.changeDeadStockPage = changeDeadStockPage;
 window.editItem = editItem;
 window.removeItem = removeItem;
 window.reorderItem = reorderItem;
@@ -852,6 +848,96 @@ function initApp() {
 // Bootstrap — runs before first render
 // ---------------------------------------------------------------------------
 (async function bootstrap() {
+  // The API does not expose authentication yet. Keep this clearly identified
+  // local preview gate separate from any future server-backed sign-in.
+  const publicSite = document.getElementById('publicSite');
+  const loginView = document.getElementById('loginView');
+  const appShell = document.getElementById('appShell');
+  const startRoute = window.location.hash.slice(1);
+  const setRoute = route => {
+    if (window.location.hash !== `#${route}`) {
+      window.history.replaceState(window.history.state, '', `#${route}`);
+    }
+  };
+  const showHome = (preserveRoute = false) => {
+    if (!preserveRoute) setRoute('home');
+    if (publicSite) publicSite.hidden = false;
+    if (loginView) loginView.hidden = true;
+    if (appShell) appShell.hidden = true;
+    if (preserveRoute && ['features', 'how-it-works'].includes(startRoute)) {
+      requestAnimationFrame(() => document.getElementById(startRoute)?.scrollIntoView({ behavior: 'instant' }));
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  };
+  const showLogin = () => {
+    setRoute('login');
+    if (publicSite) publicSite.hidden = true;
+    if (loginView) loginView.hidden = false;
+    if (appShell) appShell.hidden = true;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.getElementById('loginEmail')?.focus();
+  };
+  const openWorkspace = (email = '') => {
+    setRoute('dashboard');
+    if (publicSite) publicSite.hidden = true;
+    if (loginView) loginView.hidden = true;
+    if (appShell) appShell.hidden = false;
+    const firstName = email.split('@')[0]?.replace(/[._-]+/g, ' ').trim() || 'Store manager';
+    const displayName = firstName.replace(/\b\w/g, letter => letter.toUpperCase());
+    const nameEl = document.getElementById('sidebarUserName');
+    const avatarEl = document.getElementById('sidebarAvatar');
+    if (nameEl) nameEl.textContent = displayName;
+    if (avatarEl) avatarEl.textContent = displayName.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  document.querySelectorAll('[data-show-login]').forEach(button => button.addEventListener('click', showLogin));
+  document.querySelectorAll('[data-show-home]').forEach(button => button.addEventListener('click', event => {
+    event.preventDefault();
+    showHome();
+  }));
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail')?.value.trim() || '';
+    const password = document.getElementById('loginPassword')?.value || '';
+    const error = document.getElementById('loginError');
+    if (!email || !password) {
+      if (error) error.textContent = 'Enter your email and password to continue.';
+      return;
+    }
+    try { localStorage.setItem('stockwiseDemoSession', email); } catch (_) { /* Session remains available for this tab. */ }
+    if (error) error.textContent = '';
+    openWorkspace(email);
+    startWorkspace();
+  });
+  document.getElementById('togglePassword')?.addEventListener('click', event => {
+    const password = document.getElementById('loginPassword');
+    if (!password) return;
+    const isVisible = password.type === 'text';
+    password.type = isVisible ? 'password' : 'text';
+    event.currentTarget.textContent = isVisible ? 'Show' : 'Hide';
+    event.currentTarget.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+  });
+  document.getElementById('logoutButton')?.addEventListener('click', () => {
+    try { localStorage.removeItem('stockwiseDemoSession'); } catch (_) { /* Ignore unavailable storage. */ }
+    showHome();
+  });
+  let savedSession = '';
+  try { savedSession = localStorage.getItem('stockwiseDemoSession') || ''; } catch (_) { /* Stay on the public home page. */ }
+  const landingRoutes = new Set(['home', 'features', 'how-it-works']);
+  if (savedSession && !landingRoutes.has(startRoute) && startRoute !== 'login') {
+    openWorkspace(savedSession);
+    if (document.getElementById(startRoute)?.classList.contains('section')) {
+      navigateTo(startRoute);
+    }
+  } else if (startRoute === 'login') {
+    showLogin();
+  } else {
+    showHome(landingRoutes.has(startRoute));
+  }
+
   // 1. Load persisted inventory
   loadFromStorage();
 
@@ -867,18 +953,45 @@ function initApp() {
       e.preventDefault();
       const targetId = link.getAttribute('href').substring(1);
       navigateTo(targetId);
+      const moreMenu = document.getElementById('mobileMoreMenu');
+      const moreButton = document.getElementById('mobileMoreButton');
+      moreMenu?.classList.remove('open');
+      moreButton?.setAttribute('aria-expanded', 'false');
     });
   });
+
+  const moreMenu = document.getElementById('mobileMoreMenu');
+  const moreButton = document.getElementById('mobileMoreButton');
+  if (moreMenu && moreButton) {
+    moreButton.addEventListener('click', event => {
+      event.stopPropagation();
+      const isOpen = moreMenu.classList.toggle('open');
+      moreButton.setAttribute('aria-expanded', String(isOpen));
+    });
+    document.addEventListener('click', event => {
+      if (!moreMenu.contains(event.target) && !moreButton.contains(event.target)) {
+        moreMenu.classList.remove('open');
+        moreButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 
   // 4. Theme toggle
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
+    const syncThemeControl = () => {
+      const isDark = document.documentElement.getAttribute('data-color-scheme') === 'dark';
+      themeToggle.setAttribute('aria-pressed', String(isDark));
+      themeToggle.title = isDark ? 'Switch to light appearance' : 'Switch to dark appearance';
+    };
     themeToggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-color-scheme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-color-scheme', next);
       saveTheme(next);
+      syncThemeControl();
     });
+    syncThemeControl();
   }
 
   // 5. Filter inputs
@@ -929,13 +1042,23 @@ function initApp() {
   const fileInput = document.getElementById('fileInput');
   if (fileInput) fileInput.addEventListener('change', handleFileSelect);
 
-  // 9. Initial render
-  updateBackendStatus();
-  setInterval(updateBackendStatus, CONFIG.STATUS_CHECK_INTERVAL);
-
-  setLoadPageHandler((page) => loadInventoryPage(page));
-  await syncInventoryAllFromBackend();
-  initApp();
-
-  showToast('✅ Dashboard loaded successfully! All values are now in Indian Rupees (₹)', 'success', 3000);
+  // Initialize costly workspace data only when the user enters the dashboard.
+  // The public landing page and login screen should not fetch the full catalog.
+  let workspaceInitialized = false;
+  function startWorkspace() {
+    if (workspaceInitialized) return;
+    workspaceInitialized = true;
+    updateBackendStatus();
+    setInterval(updateBackendStatus, CONFIG.STATUS_CHECK_INTERVAL);
+    setLoadPageHandler((page) => loadInventoryPage(page));
+    initApp();
+    if (savedSession && appShell && !appShell.hidden) {
+      showToast('✅ Dashboard loaded successfully! All values are now in Indian Rupees (₹)', 'success', 3000);
+    }
+    syncInventoryAllFromBackend().then(() => {
+      refreshAll();
+      return loadInventoryPage(_inventoryTablePage);
+    });
+  }
+  if (appShell && !appShell.hidden) startWorkspace();
 })();

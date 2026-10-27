@@ -23,6 +23,10 @@ let reorderChart = null;
  * @returns {void}
  */
 export function initCharts() {
+  // Charts are an enhancement; do not prevent the rest of the workspace from
+  // starting when the optional CDN script is unavailable.
+  if (typeof Chart === 'undefined') return;
+
   const inventory = getInventory();
 
   const deadStockByCategory = {};
